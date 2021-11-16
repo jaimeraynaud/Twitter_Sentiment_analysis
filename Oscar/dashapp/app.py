@@ -32,6 +32,7 @@ def dashboard(data):
     df = data[['geo_location', 'label']]
     countries = df.geo_location.unique().tolist()
     newDf = pd.DataFrame({'Countries': countries})
+    newDf2 = pd.DataFrame({'Countries': countries})
     for i in countries:
         labels = ['pos', 'neg', 'neu']
         total = len(df[(df.geo_location == i)])
@@ -39,7 +40,8 @@ def dashboard(data):
             counting = len(df[(df.geo_location == i) & (df.label == x)])
             count = round(counting/total*100)
             newDf.loc[newDf.Countries == i, x] = count
-    
+            newDf2.loc[newDf2.Countries == i, x] = counting
+    df2 = newDf2
     df = newDf
 
     # ger = df.query("Country == 'Germany'")
@@ -54,7 +56,7 @@ def dashboard(data):
     #allCntry = px.bar(df, x="Countries", y="pos", barmode="group")
     #allCntry = df.plot.bar(rot=0)
     allCntry = px.bar(df, x="Countries", y=['pos','neg','neu'], title="Positive, Negative and Neutral Tweets")
-    
+    allCntryNum = px.bar(df2, x="Countries", y=['pos','neg','neu'], title="Positive, Negative and Neutral Tweets")
     # Initialise the app# Initialize the app
     app = dash.Dash(__name__)
     app.config.suppress_callback_exceptions = True
@@ -92,7 +94,10 @@ def dashboard(data):
                                             children=[
                                                 dcc.Graph(id='graph', figure=allCntry)
                                             ]),
-
+                                    html.Div(className='eight columns div-for-charts bg-grey',
+                                            children=[
+                                                dcc.Graph(id='graph2', figure=allCntryNum)
+                                            ]),
                                 ]),
         ]
 
