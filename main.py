@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import numpy as np
-import time
+import requests
 
 from scripts.twitter import TwitterApi
 from scripts.database import DataBase
@@ -69,20 +69,6 @@ def new_tweets(df):
 
     return df
 
-def twitter_api(twitter, db):
-    for geo, country in get_locations_from_file():
-        print('getting:', country)
-        for hashtag in get_hashtags_from_file():
-            print('getting:', country, hashtag)
-            try:
-                df = twitter.digital_ocean(geo, country, hashtag)
-                db.upload_data(df, 'DigitalOceanTweets', error='append')
-                print('sleeping for 15 minutes...')
-                time.sleep(900)
-            except Exception as e:
-                print(e)
-                print('something went wrong')
-
 def __init__():
     load_dotenv()
     twitter = TwitterApi()
@@ -94,17 +80,11 @@ def __init__():
 if __name__ == "__main__":
     # RUN CODE HERE
     twitter, unhcr, db = __init__()
-    # df = db.get_tweets()
+    df = db.get_tweets()
+    df = df[df['language'] == 'en']
 
-    #df = df[df['language'] == 'en']
-    # create_basic_models(df)
-    twitter_api(twitter, db)
-
-    # clean = Clean(df)
-    # df = clean.df
+    create_basic_models(df)
     
-    # df = do_sentiment(df)
-    # print(df)
 
     # db.upload_data(df, 'TestSentimentClusters03', error='replace')
 

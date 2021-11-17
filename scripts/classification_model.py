@@ -74,7 +74,9 @@ class ClassificationModel:
         print(f'\nCreating model: {self.model}...')
 
         start = time.time()
+        
         y = self.df[self.y]
+        print(y)
         y = y.factorize()[0]
         X = self.__create_matrix_df()
         print(y)
