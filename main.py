@@ -2,15 +2,17 @@ from dotenv import load_dotenv
 import numpy as np
 import requests
 
-from scriptss.twitter import TwitterApi
-from scriptss.database import DataBase
-from scriptss.unhcr import Unhcr
-from scriptss.clean import Clean
-from scriptss.words import graph, display_wordcloud
-from scriptss.classification_model import ClassificationModel, create_basic_models
-from scriptss.tryout.tr import t
-from scriptss.cluster import cluster
-from Oscar.dashapp.app import dashboard
+from twitter5.scripts.twitter import TwitterApi
+from twitter5.scripts.database import DataBase
+from twitter5.scripts.unhcr import Unhcr
+from twitter5.scripts.clean import Clean
+from twitter5.scripts.words import graph, display_wordcloud
+from twitter5.scripts.classification_model import ClassificationModel, create_basic_models
+from twitter5.scripts.tryout.tr import t
+from twitter5.scripts.cluster import cluster
+# from Oscar.dashapp.app import dashboard
+
+
 def get_hashtags_from_file():
     with open('./files/hashtags.txt') as f:
         content = [line.split('\n')[0] for line in f.readlines()]
@@ -80,14 +82,15 @@ if __name__ == "__main__":
     # RUN CODE HERE
     twitter, unhcr, db = __init__()
     df = db.get_tweets()
-    dashboard(df)
+    print(df.geo_location.value_counts())
+    # dashboard(df)
     # df = db.get_tweets()
 
     #df = df[df['language'] == 'en']
     # create_basic_models(df)
     #twitter_api(twitter, db)
 
-    create_basic_models(df)
+    # create_basic_models(df)
     
 
     # db.upload_data(df, 'TestSentimentClusters03', error='replace')
