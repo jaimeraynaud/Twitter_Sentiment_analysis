@@ -11,10 +11,10 @@ from sklearn.manifold import TSNE
 
 def cluster(df):
     tfidf = TfidfVectorizer(
-    min_df = 5,
-    max_df = 0.95,
-    #max_features = 10000,
-    stop_words = 'english'
+        min_df = 5,
+        max_df = 0.95,
+        #max_features = 10000,
+        stop_words = 'english'
     )
 
     tfidf.fit(df.text)
@@ -39,7 +39,7 @@ def cluster(df):
         plt.show()
 
     find_optimal_clusters_sse(text, 20)
-    clusters = MiniBatchKMeans(n_clusters=18, init_size=1024, batch_size=2048, random_state=20).fit_predict(text)
+    clusters = MiniBatchKMeans(n_clusters=16, init_size=1024, batch_size=2048, random_state=20).fit_predict(text)
     df['cluster'] = clusters
 
     def plot_tsne_pca(data, labels):

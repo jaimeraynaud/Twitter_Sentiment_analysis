@@ -17,7 +17,7 @@ from sklearn.preprocessing import LabelBinarizer
 
 
 class ClassificationModel:
-    def __init__(self, df, model, X='text', y='label', test_size=0.2, k_fold=None, plot_auc=False, vec='count', max_features=10000, ngram_range=(1,2)):
+    def __init__(self, df, model, X='text', y='label', test_size=0.2, k_fold=None, plot_auc=False, vec='count', max_features=20000, ngram_range=(1,2)):
         self.df = df
         self.model = model
         self.X = X
@@ -76,10 +76,8 @@ class ClassificationModel:
         start = time.time()
         
         y = self.df[self.y]
-        print(y)
         y = y.factorize()[0]
         X = self.__create_matrix_df()
-        print(y)
 
         if not self.k_fold:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=self.test_size)
@@ -190,10 +188,10 @@ def logstic_regression(df):
     return logistic
 
 def random_forest(df):
-    model = ClassificationModel(df, model=RandomForestClassifier(), k_fold=5, vec='tfid')
+    model = ClassificationModel(df, model=RandomForestClassifier(), k_fold=5, vec='count')
 
     best_params = model.grid_search({
-        'model__n_estimators': list(range(30,121,10)), 
+        'model__n_estimators': list(range(90,141,10)), 
         'model__max_features': list(range(3,19,5))
     })
 
@@ -207,3 +205,11 @@ def random_forest(df):
     forest = model.create_model()
 
     return forest
+
+
+def test(df, pickle=False):
+    model = ClassificationModel(df, model=RandomForestClassifier(), k_fold=5, vec='count')
+    model.create_model()
+    if pickle:
+        pickle.dump(model.model, open('models/random_forest_model.pickle', 'wb'))
+        pickle.dump(model.vec, open('models/random_forest_vec.pickle', 'wb'))

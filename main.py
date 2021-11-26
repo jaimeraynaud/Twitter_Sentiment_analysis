@@ -2,14 +2,14 @@ from dotenv import load_dotenv
 import numpy as np
 import requests
 
-from scriptss.twitter import TwitterApi
-from scriptss.database import DataBase
-from scriptss.unhcr import Unhcr
-from scriptss.clean import Clean
-from scriptss.words import graph, display_wordcloud
-from scriptss.classification_model import ClassificationModel, create_basic_models
-from scriptss.tryout.tr import t
-from scriptss.cluster import cluster
+from scripts.twitter import TwitterApi
+from scripts.database import DataBase
+from scripts.unhcr import Unhcr
+from scripts.clean import Clean
+from scripts.words import graph, display_wordcloud
+from scripts.classification_model import ClassificationModel, create_basic_models, test, random_forest
+from scripts.tryout.tr import t
+from scripts.cluster import cluster
 from Oscar.dashapp.app import dashboard
 def get_hashtags_from_file():
     with open('./files/hashtags.txt') as f:
@@ -36,7 +36,7 @@ def print_words(df):
     graph(df[(df.sentiment_pos > 0.2)], len=50, name='Positive Tweats (>0.2)')
     graph(df[(df.sentiment_neg > 0.2)], len=50, name='Negative Tweats (>0.2)')
 
-def do_sentiment(df, threshold=0.3):
+def do_sentiment(df, threshold=0.05):
     from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
     import json
 
@@ -47,7 +47,7 @@ def do_sentiment(df, threshold=0.3):
     df['sentiment_pos'] = df['sentiment'].apply(lambda x: json.loads(x.replace("'",'"'))['pos'])
     df['sentiment_compound'] = df['sentiment'].apply(lambda x: json.loads(x.replace("'",'"'))['compound'])
     df.drop('sentiment', axis=1, inplace=True)
-    df['sentiment'] = ''
+    # df['sentiment'] = ''
     df['label'] = 'neu'
     df.loc[(df.sentiment_compound > threshold), 'label'] = 'pos'
     df.loc[(df.sentiment_compound < -1*threshold), 'label'] = 'neg'
@@ -62,7 +62,7 @@ def new_tweets(df):
     df = do_sentiment(df)
 
     # Cluster the tweets
-    df = cluster(df)
+    # df = cluster(df)
     
     # db.upload_data(df, 'finalTweets', error='extend')
 
@@ -72,7 +72,7 @@ def __init__():
     load_dotenv()
     twitter = TwitterApi()
     unhcr = Unhcr()
-    db = DataBase('TestSentimentClusters03')
+    db = DataBase('tweets')
     return twitter, unhcr, db
 
 
@@ -80,15 +80,28 @@ if __name__ == "__main__":
     # RUN CODE HERE
     twitter, unhcr, db = __init__()
     df = db.get_tweets()
-    dashboard(df)
+    # dashboard(df)
+    # df = df[df['language']=='en']
+    # df = new_tweets(df)
+    # print(df)
+    # print(df.cluster.value_counts())
+    # print(df[df['language']=='en'])
+    # print(Clean(df).df)
     # df = db.get_tweets()
 
     #df = df[df['language'] == 'en']
     # create_basic_models(df)
     #twitter_api(twitter, db)
 
-    create_basic_models(df)
+    # create_basic_models(df)
     
+    # df = df.drop('cluster',axiss=1)
+    random_forest(df)
 
-    # db.upload_data(df, 'TestSentimentClusters03', error='replace')
+    # df = do_sentiment(df)
+
+    # print(df.geo_location.value_counts())
+    # print(df.label.value_counts())
+
+    # db.upload_data(df, 'finalTweets', error='append')
 
