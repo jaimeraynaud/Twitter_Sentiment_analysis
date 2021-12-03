@@ -3,4 +3,3 @@ env
 .DS_store
 __pycache__
 Oscar/twitter.py
-/.idea
