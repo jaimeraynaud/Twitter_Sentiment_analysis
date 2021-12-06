@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-*skz^%q-^7_&nk+n08-&ktfi8t1m$hgh5u!vng+@#j8s4k(c-0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['twitter5.nl']
+ALLOWED_HOSTS = ['twitter5.nl', 'locashost:8000', '*']
 
 
 # Application definition
@@ -134,5 +134,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-from .scripts.database import DataBase
-DATABASE = DataBase('finalTweets')
+# from .scripts.database import DataBase
+# DATABASE = DataBase('finalTweets')
