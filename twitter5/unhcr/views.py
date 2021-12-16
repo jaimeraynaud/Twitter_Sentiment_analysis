@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 # db = settings.DATABASE
 
-
+@login_required()
 def index(request):
     # df = db.get_tweets()
 

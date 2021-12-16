@@ -136,3 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # from .scripts.database import DataBase
 # DATABASE = DataBase('finalTweets')
+
+
+LOGIN_REDIRECT_URL = '/admin/dashboard/'
+LOGIN_URL = '/admin/login/'
